@@ -1,0 +1,28 @@
+name: Notify Team via Email
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  send-notification:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send email to team
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "[${{ github.repository }}] Update on ${{ github.ref_name }} by ${{ github.actor }}"
+          to: abdalghaniabtah@gmail.com, alhariricam@gmail.com, alialnessir@gmail.com, rakan.ajlouni@gmail.com, ahmad7raed77@gmail.com
+          from: "GitHub Repo Bot <${{ secrets.MAIL_USERNAME }}>"
+          body: |
+            Repository: ${{ github.repository }}
+            Event: ${{ github.event_name }}
+            Branch: ${{ github.ref_name }}
+            By: ${{ github.actor }}
+            Commit: ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}
