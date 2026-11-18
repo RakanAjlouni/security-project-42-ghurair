@@ -18,7 +18,7 @@ jobs:
           secure: false
           username: ${{ secrets.MAIL_USERNAME }}
           password: ${{ secrets.MAIL_PASSWORD }}
-          subject: "[${{ github.repository }}] Update on ${{ github.ref_name }} by ${{ github.actor }}"
+          subject: "[${{ github.repository }}] ${{ github.event.head_commit.message || github.event.pull_request.title }}"
           to: abdalghaniabtah@gmail.com, alhariricam@gmail.com, alialnessir@gmail.com, rakan.ajlouni@gmail.com, ahmad7raed77@gmail.com
           from: "GitHub Repo Bot <${{ secrets.MAIL_USERNAME }}>"
           body: |
@@ -26,4 +26,5 @@ jobs:
             Event: ${{ github.event_name }}
             Branch: ${{ github.ref_name }}
             By: ${{ github.actor }}
+            Message: ${{ github.event.head_commit.message || github.event.pull_request.title }}
             Commit: ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}
