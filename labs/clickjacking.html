@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Clickjacking - Ghurir</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header>
+      <nav>
+        <a href="index.html" style="text-decoration: none"><b>Ghurir</b></a>
+        <div class="links">
+          <a href="index.html">Home</a
+          ><a href="clickjacking.html" class="here">Clickjacking</a
+          ><a href="origin-validation.html">Origin Validation</a
+          ><a href="prototype-pollution.html">Prototype Pollution</a>
+        </div>
+      </nav>
+    </header>
+    <main class="lab">
+      <h1>Clickjacking</h1>
+      <p class="tag">
+        CWE-1021 &middot; OWASP A04:2021 Insecure Design (verify mapping)
+      </p>
+      <section class="card">
+        <h2>What it is</h2>
+        <p>
+          Clickjacking (CWE-1021, Improper Restriction of Rendered UI Layers or
+          Frames) lets an attacker embed your page invisibly under a decoy so
+          the visitor's click triggers an action they never intended. The
+          browser only refuses to frame the page if the server says so with a
+          header.
+        </p>
+      </section>
+      <section class="card">
+        <h2>The vulnerable code</h2>
+        <pre data-hl="2,3">
+app.get('/settings', (req, res) => {
+  // no X-Frame-Options, no CSP frame-ancestors
+  res.send(settingsPageHtml);
+});</pre>
+        <p>
+          The response carries no framing policy, so any site, such as
+          evil.example, may load this page in an invisible iframe.
+        </p>
+      </section>
+      <section class="card">
+        <h2>Try it</h2>
+        <p class="steps">
+          <b>Pick a mode</b>, then <b>fire a payload</b>, then
+          <b>read the result</b>. Switch mode and fire the same payload again.
+        </p>
+        <div class="sw">
+          <button data-mode="vulnerable" class="on">Vulnerable</button
+          ><button data-mode="fixed">Fixed</button>
+        </div>
+        <p>Attacker page (evil.example) - the green button is a decoy:</p>
+        <div class="stage">
+          <button class="fake" id="decoy">Claim free prize</button
+          ><span class="hint">decoy page</span
+          ><iframe id="frame" title="target"></iframe>
+        </div>
+        <button class="atk" data-payload="launch">1. Load attack page</button
+        ><button class="atk" data-payload="reveal">
+          2. Reveal hidden frame</button
+        ><button class="atk" data-payload="click">
+          3. Simulate victim click
+        </button>
+        <div id="out" class="out"></div>
+        <button data-reset>Reset</button>
+      </section>
+      <section class="card">
+        <h2>Why it matters</h2>
+        <p>
+          A hidden click can change settings, approve payments or delete
+          accounts using the victim's logged-in session. A clickjacking worm
+          spread on Twitter in 2009 (see Wikipedia's Clickjacking article).
+        </p>
+      </section>
+      <section class="card">
+        <h2>The fix</h2>
+        <p class="steps">
+          Switch modes below and re-run your last payload to see the difference.
+        </p>
+        <pre class="fix" data-hl="2,3">
+app.get('/settings', (req, res) => {
+  res.set('Content-Security-Policy', "frame-ancestors 'self'");
+  res.set('X-Frame-Options', 'SAMEORIGIN'); // older browsers
+  res.send(settingsPageHtml);
+});</pre>
+        <p>
+          The browser reads these headers and refuses to render the page inside
+          other origins. Limitation: with no backend, this demo only simulates
+          that browser decision by parsing the same header value; JavaScript
+          alone cannot provide this protection, so real sites must set the
+          headers on the server.
+        </p>
+        <div class="sw">
+          <button data-mode="vulnerable" class="on">Vulnerable</button
+          ><button data-mode="fixed">Fixed</button>
+        </div>
+        <button data-rerun>Run the last payload in the other mode</button>
+      </section>
+      <section class="card">
+        <h2>Sources</h2>
+        <ul>
+          <li>
+            <a href="https://cwe.mitre.org/data/definitions/1021.html"
+              >MITRE CWE-1021</a
+            >
+          </li>
+          <li>
+            <a
+              href="https://cheatsheetseries.owasp.org/cheatsheets/Clickjacking_Defense_Cheat_Sheet.html"
+              >OWASP Clickjacking Defense Cheat Sheet</a
+            >
+          </li>
+          <li>
+            <a
+              href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy/frame-ancestors"
+              >MDN: CSP frame-ancestors</a
+            >
+          </li>
+          <li>
+            <a href="https://en.wikipedia.org/wiki/Clickjacking"
+              >Wikipedia: Clickjacking</a
+            >
+          </li>
+        </ul>
+      </section>
+    </main>
+    <footer>
+      <div class="foot">
+        <div>
+          <p><b>Ghurir - Interactive Web Security Sandbox</b></p>
+          <p>
+            42 Amman / 42 Irbid Cybersecurity Final Project, 15-22 November
+            2026.
+          </p>
+          <p>
+            Team: add names here. Educational simulation: nothing here attacks
+            real systems.
+          </p>
+        </div>
+        <div>
+          <p><b>Labs</b></p>
+          <a href="clickjacking.html">Clickjacking</a
+          ><a href="origin-validation.html">Origin Validation</a
+          ><a href="prototype-pollution.html">Prototype Pollution</a>
+        </div>
+      </div>
+    </footer>
+    <script src="js/main.js"></script>
+    <script src="js/clickjacking.js"></script>
+  </body>
+</html>

@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Ghurir - Interactive Web Security Sandbox</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header>
+      <nav>
+        <a href="index.html" style="text-decoration: none"><b>Ghurir</b></a>
+        <div class="links">
+          <a href="index.html" class="here">Home</a
+          ><a href="clickjacking.html">Clickjacking</a
+          ><a href="origin-validation.html">Origin Validation</a
+          ><a href="prototype-pollution.html">Prototype Pollution</a>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <div class="hero">
+        <h1>Break it, then fix it.</h1>
+        <p>
+          Ghurir teaches three web vulnerabilities with safe, working
+          simulations. Press a payload, watch the flaw happen, switch to the
+          fixed code, and run the exact same payload again.
+        </p>
+        <div class="flow">
+          <span class="r">1. Attack the vulnerable code</span
+          ><span class="g">2. Switch to the fix</span
+          ><span>3. Fire the same payload</span>
+        </div>
+      </div>
+      <div class="grid">
+        <div class="card">
+          <span class="pill Easy">Easy</span>
+          <h2>Clickjacking</h2>
+          <p>CWE-1021 - Click a decoy, trigger a hidden action.</p>
+          <a href="clickjacking.html"><button>Open lab</button></a>
+        </div>
+        <div class="card">
+          <span class="pill Medium">Medium</span>
+          <h2>Origin Validation Error</h2>
+          <p>CWE-346 - Messages from the wrong site get accepted.</p>
+          <a href="origin-validation.html"><button>Open lab</button></a>
+        </div>
+        <div class="card">
+          <span class="pill Hard">Hard</span>
+          <h2>Prototype Pollution</h2>
+          <p>CWE-1321 - Poison a shared prototype to bypass an admin check.</p>
+          <a href="prototype-pollution.html"><button>Open lab</button></a>
+        </div>
+      </div>
+      <section class="card how">
+        <h2>How each lab works</h2>
+        <p>
+          Every lab has a Vulnerable and a Fixed implementation. The same
+          payload runs against both, so you see the attack succeed in one and
+          fail in the other because the code genuinely differs.
+        </p>
+      </section>
+    </main>
+    <footer>
+      <div class="foot">
+        <div>
+          <p><b>Ghurir - Interactive Web Security Sandbox</b></p>
+          <p>
+            42 Amman / 42 Irbid Cybersecurity Final Project, 15-22 November
+            2026.
+          </p>
+          <p>
+            Team: add names here. Educational simulation: nothing here attacks
+            real systems.
+          </p>
+        </div>
+        <div>
+          <p><b>Labs</b></p>
+          <a href="clickjacking.html">Clickjacking</a
+          ><a href="origin-validation.html">Origin Validation</a
+          ><a href="prototype-pollution.html">Prototype Pollution</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
