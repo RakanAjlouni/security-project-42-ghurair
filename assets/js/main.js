@@ -1,16 +1,16 @@
-// Shared lab helper: mode switch, payload buttons, reset, status output.
+"use strict";
+
 const Lab = {
   mode: "vulnerable",
   last: null,
   run: null,
   reset: null,
   show(kind, title, text) {
-    // kind: 'bad' (attack worked) | 'good' (safe / blocked)
     const out = document.getElementById("out");
-    out.className = "out " + kind;
+    out.className = kind ? `out ${kind}` : "out";
     const label = document.createElement("strong");
     label.textContent = title;
-    out.replaceChildren(label, " " + text);
+    out.replaceChildren(label, ` ${text}`);
   },
   setMode(mode) {
     this.mode = mode;
@@ -40,8 +40,14 @@ const Lab = {
     document.querySelectorAll("[data-rerun]").forEach(
       (b) =>
         (b.onclick = () => {
-          // same payload, other implementation
-          if (!this.last) return alert("Run a payload in section 3 first.");
+          if (!this.last) {
+            this.show(
+              "",
+              "Select a payload first.",
+              "Fire a payload in Section 3 before switching modes.",
+            );
+            return;
+          }
           this.setMode(this.mode === "vulnerable" ? "fixed" : "vulnerable");
           run(this.last);
         }),
@@ -49,7 +55,7 @@ const Lab = {
     reset();
   },
 };
-// Wrap each line of <pre data-hl="2,5"> in a span and highlight the listed lines.
+
 document.querySelectorAll("pre[data-hl]").forEach((pre) => {
   const marked = pre.dataset.hl.split(",").map(Number);
   const lines = pre.textContent.replace(/^\n/, "").trimEnd().split("\n");

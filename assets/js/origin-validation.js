@@ -1,17 +1,21 @@
+"use strict";
+
 const ALLOWED_ORIGINS = ["https://app.ghurir.example"];
-let balance = 1000,
-  outcome = null;
-const logEl = document.getElementById("log"),
-  balanceEl = document.getElementById("balance");
+let balance = 1000;
+let outcome = null;
+
+const logEl = document.getElementById("log");
+const balanceEl = document.getElementById("balance");
 
 function onMessageVulnerable(event) {
-  balance -= event.data.amount; // no origin check, no validation
+  balance -= event.data.amount;
   return { accepted: true };
 }
+
 function onMessageFixed(event) {
-  // SECURITY: exact-match allowlist on event.origin before touching event.data
-  if (!ALLOWED_ORIGINS.includes(event.origin))
+  if (!ALLOWED_ORIGINS.includes(event.origin)) {
     return { accepted: false, why: "origin not in allowlist" };
+  }
   const m = event.data;
   const valid =
     m &&
@@ -19,15 +23,18 @@ function onMessageFixed(event) {
     Number.isFinite(m.amount) &&
     m.amount > 0 &&
     m.amount <= balance;
-  if (!valid) return { accepted: false, why: "unexpected message structure" };
+  if (!valid) {
+    return { accepted: false, why: "unexpected message structure" };
+  }
   balance -= m.amount;
   return { accepted: true };
 }
-// The receiving app: one real 'message' listener on window.
+
 window.addEventListener("message", (event) => {
   outcome =
     Lab.mode === "fixed" ? onMessageFixed(event) : onMessageVulnerable(event);
 });
+
 const PAYLOADS = {
   trusted: {
     origin: ALLOWED_ORIGINS[0],
@@ -45,8 +52,7 @@ const PAYLOADS = {
     harmful: true,
   },
 };
-// Browsers will not let a script forge event.origin, so the senders are simulated:
-// we dispatch a real MessageEvent with the origin the sender would have had.
+
 function run(id) {
   const p = PAYLOADS[id];
   window.dispatchEvent(
@@ -54,37 +60,34 @@ function run(id) {
   );
   balanceEl.textContent = balance;
   const li = document.createElement("li");
-  li.textContent =
-    p.origin +
-    " sent " +
-    JSON.stringify(p.data) +
-    " -> " +
-    (outcome.accepted ? "ACCEPTED" : "REJECTED (" + outcome.why + ")");
+  li.textContent = `${p.origin} sent ${JSON.stringify(p.data)} -> ${
+    outcome.accepted ? "ACCEPTED" : `REJECTED (${outcome.why})`
+  }`;
   logEl.prepend(li);
-  if (outcome.accepted && p.harmful)
+  if (outcome.accepted && p.harmful) {
     Lab.show(
       "bad",
       "Vulnerable behavior triggered.",
-      "Untrusted or malformed message accepted; balance is now " +
-        balance +
-        ".",
+      `Untrusted or malformed message accepted; balance is now ${balance}.`,
     );
-  else if (outcome.accepted)
+  } else if (outcome.accepted) {
     Lab.show(
       "good",
       "Trusted message accepted.",
       "Allowlisted origin and valid structure.",
     );
-  else
+  } else {
     Lab.show(
       "good",
       "Message rejected.",
-      "Reason: " + outcome.why + ". Balance unchanged.",
+      `Reason: ${outcome.why}. Balance unchanged.`,
     );
+  }
 }
+
 Lab.start(run, () => {
   balance = 1000;
   balanceEl.textContent = balance;
   logEl.replaceChildren();
-  Lab.show("", "Ready.", "Mode: " + Lab.mode + ". Send a message.");
+  Lab.show("", "Ready.", `Mode: ${Lab.mode}. Send a message.`);
 });
