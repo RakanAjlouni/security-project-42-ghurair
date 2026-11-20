@@ -1,6 +1,6 @@
-# Ghurir — Interactive Web Security Sandbox
+# IWSS — Interactive Web Security Sandbox
 
-An interactive, client-side web security sandbox built for the **Ghurir Final Project** at **42 Irbid**.
+An interactive, client-side web security sandbox built for the **IWSS** at **42 Irbid**.
 
 🌐 **Live Demo:** https://rakanajlouni.github.io/security-project-42-ghurair/
 
@@ -8,7 +8,7 @@ An interactive, client-side web security sandbox built for the **Ghurir Final Pr
 
 ## Overview
 
-Ghurir provides three safe, interactive web security labs where visitors see how a vulnerability happens, inspect the broken code, and toggle to the fixed version to verify that the same payload is blocked. Everything runs client-side with HTML, CSS, and JavaScript—no backend, login, or database is used.
+IWSS provides three safe, interactive web security labs where visitors see how a vulnerability happens, inspect the broken code, and toggle to the fixed version to verify that the same payload is blocked. Everything runs client-side with HTML, CSS, and JavaScript—no backend, login, or database is used.
 
 ### Covered Vulnerabilities
 

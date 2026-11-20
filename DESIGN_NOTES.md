@@ -1,4 +1,4 @@
-# Ghurir — Blue × Terracotta UI Redesign
+# IWSS — Blue × Terracotta UI Redesign
 
 This visual redesign keeps the original three safe security simulations, while upgrading the layout, responsive design and usability.
 
