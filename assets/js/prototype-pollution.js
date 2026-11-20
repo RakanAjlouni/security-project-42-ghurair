@@ -62,8 +62,8 @@ function render() {
     `user own props     : ${JSON.stringify(Object.keys(user))}\n` +
     `shared prototype   : ${proto ? JSON.stringify(protoKeys) : "null (no prototype)"}\n` +
     `user.isAdmin       : ${user.isAdmin}\n` +
-    `guest.isAdmin      : ${guest.isAdmin}  (never edited)\n` +
-    `isAdmin(user)      : ${check(user)}\n` +
+    `guest.isAdmin      : ${guest.isAdmin}  (never edited directly)\n` +
+    `isAdmin(guest)     : ${check(guest)}\n` +
     `real Object.prototype polluted? ${"isAdmin" in Object.prototype}`;
   return check(guest);
 }
@@ -80,24 +80,25 @@ function run(id) {
     error = e.message;
   }
   const adminGranted = render();
-  const text = ` Payload: ${PAYLOADS[id]}`;
+  const payloadNote = `Payload sent: ${PAYLOADS[id]}`;
+
   if (error) {
     Lab.show(
       "good",
-      "Dangerous property rejected.",
-      `${error}. No one gained admin.${text}`,
+      "Dangerous key blocked safely",
+      `${error}. The shared prototype stayed clean and no one got admin access. (${payloadNote})`,
     );
   } else if (adminGranted) {
     Lab.show(
       "bad",
-      "Prototype property modified.",
-      `An untouched guest now passes the admin check via inheritance.${text}`,
+      "Prototype polluted! Guest gained admin access",
+      `Editing the shared prototype affected "guest" too, even though "guest" was never touched directly. (${payloadNote})`,
     );
   } else {
     Lab.show(
       "good",
-      "Profile updated.",
-      `Safe input merged; no admin access.${text}`,
+      "Safe update applied cleanly",
+      `Only the allowed property changed on "user", and "guest" has no admin access. (${payloadNote})`,
     );
   }
 }
@@ -105,5 +106,11 @@ function run(id) {
 Lab.start(run, () => {
   setup();
   render();
-  Lab.show("", "Ready.", `Mode: ${Lab.mode}. Send a payload.`);
+  Lab.show(
+    "",
+    "Ready to test",
+    Lab.mode === "fixed"
+      ? "Protection is active: try a dangerous payload to see it blocked."
+      : "No protection is active: try a __proto__ payload to see how it affects guest.",
+  );
 });

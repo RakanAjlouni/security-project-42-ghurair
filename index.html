@@ -1,83 +1,113 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Ghurir - Interactive Web Security Sandbox</title>
-    <link rel="stylesheet" href="assets/css/style.css" />
-  </head>
-  <body>
-    <header>
-      <nav>
-        <a href="index.html" style="text-decoration: none"><b>Ghurir</b></a>
-        <div class="links">
-          <a href="index.html" class="here">Home</a>
-          <a href="labs/clickjacking.html">Clickjacking</a>
-          <a href="labs/origin-validation.html">Origin Validation</a>
-          <a href="labs/prototype-pollution.html">Prototype Pollution</a>
-        </div>
-      </nav>
-    </header>
-    <main>
-      <div class="hero">
-        <h1>Break it, then fix it.</h1>
-        <p>
-          Ghurir teaches three web vulnerabilities with safe, working
-          simulations. Press a payload, watch the flaw happen, switch to the
-          fixed code, and run the exact same payload again.
-        </p>
-        <div class="flow">
-          <span class="r">1. Attack the vulnerable code</span>
-          <span class="g">2. Switch to the fix</span>
-          <span>3. Fire the same payload</span>
-        </div>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#F6F4EE" />
+  <meta name="description" content="Ghurir — three safe, interactive web security labs where you see how vulnerabilities happen, read the broken code, and check the fix." />
+  <title>Ghurir — Interactive Web Security Sandbox</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+<header>
+  <nav aria-label="Primary navigation">
+    <a class="brand" href="index.html" aria-label="Ghurir home">
+      <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 5l-4 14"/></svg></span>
+      <span class="brand-name">Ghurir</span><span class="brand-meta">Security Lab</span>
+    </a>
+    <div class="links">
+      <a href="index.html" class="here" aria-current="page">Home</a>
+      <a href="labs/clickjacking.html">Clickjacking</a>
+      <a href="labs/origin-validation.html">Origin Validation</a>
+      <a href="labs/prototype-pollution.html">Prototype Pollution</a>
+    </div>
+  </nav>
+</header>
+<main class="home-main">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-copy">
+      <span class="eyebrow">Interactive web security sandbox</span>
+      <h1 id="hero-title">See how it breaks,<br /><em>then how it's fixed.</em></h1>
+      <p>Explore each vulnerability step by step: watch the attack happen, read the code that caused it, and check the safe fix.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#labs"><span aria-hidden="true">↗</span> Explore the labs</a>
       </div>
-      <div class="grid">
-        <div class="card">
-          <span class="pill Easy">Easy</span>
-          <h2>Clickjacking</h2>
-          <p>CWE-1021 - Click a decoy, trigger a hidden action.</p>
-          <a href="labs/clickjacking.html"><button>Open lab</button></a>
-        </div>
-        <div class="card">
-          <span class="pill Medium">Medium</span>
-          <h2>Origin Validation Error</h2>
-          <p>CWE-346 - Messages from the wrong site get accepted.</p>
-          <a href="labs/origin-validation.html"><button>Open lab</button></a>
-        </div>
-        <div class="card">
-          <span class="pill Hard">Hard</span>
-          <h2>Prototype Pollution</h2>
-          <p>CWE-1321 - Poison a shared prototype to bypass an admin check.</p>
-          <a href="labs/prototype-pollution.html"><button>Open lab</button></a>
-        </div>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <div class="art-halo"></div>
+      <div class="art-screen">
+        <div class="art-screen-top"><span class="art-dot"></span><span class="art-dot"></span><span class="art-dot"></span></div>
+        <div class="art-screen-code"><div class="code-line c2"></div><div class="code-line c3"></div><div class="code-line c5"></div><div class="code-line c4"></div><div class="code-line c2"></div><div class="code-line c3"></div></div>
       </div>
-      <section class="card how">
-        <h2>How each lab works</h2>
-        <p>
-          Every lab has a Vulnerable and a Fixed implementation. The same
-          payload runs against both, so you see the attack succeed in one and
-          fail in the other because the code genuinely differs.
-        </p>
-      </section>
-    </main>
-    <footer>
-      <div class="foot">
-        <div>
-          <p><b>Ghurir - Interactive Web Security Sandbox</b></p>
-          <p>42 Irbid Cybersecurity Final Project, 15-22 November 2026.</p>
-          <p>
-            Team: raajloun, aal_ness, sal-fara, ahalshou, aabtah. Educational
-            simulation only.
-          </p>
-        </div>
-        <div>
-          <p><b>Labs</b></p>
-          <a href="labs/clickjacking.html">Clickjacking</a>
-          <a href="labs/origin-validation.html">Origin Validation</a>
-          <a href="labs/prototype-pollution.html">Prototype Pollution</a>
-        </div>
+      <div class="art-shield"><svg viewBox="0 0 110 128" fill="none"><path d="M55 4 102 24v38c0 30-19 48-47 62C27 110 8 92 8 62V24L55 4Z" style="fill:var(--primary);stroke:var(--primary-soft)" stroke-width="6"/><path d="M55 18 89 32v31c0 22-13 35-34 47-21-12-34-25-34-47V32l34-14Z" style="fill:var(--accent-soft)"/><rect x="38" y="58" width="34" height="29" rx="6" style="fill:var(--accent)"/><path d="M45 58v-9a10 10 0 0 1 20 0v9" style="stroke:var(--accent)" stroke-width="7"/><circle cx="55" cy="70" r="3" style="fill:var(--card)"/></svg></div>
+      <div class="art-spark code">&lt;/&gt;</div>
+      <div class="art-spark lock"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 1 1 8 0v3"/></svg></div>
+    </div>
+  </section>
+  <section class="card how" id="how-it-works">
+    <div>
+      <span class="section-kicker">How each lab works</span>
+      <h2>Clear steps, real behavior.</h2>
+      <p>Every lab walks you through the bug and the solution in order: see how the attack works, check the vulnerable code, then compare it with the fixed code.</p>
+    </div>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-num">1</div>
+        <b>See the attack</b>
+        <small>Test Vulnerable vs. Fixed</small>
       </div>
-    </footer>
-  </body>
+      <div class="flow-step">
+        <div class="flow-num">2</div>
+        <b>Read the flaw</b>
+        <small>Spot why the code fails</small>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">3</div>
+        <b>Check the fix</b>
+        <small>See how it stays safe</small>
+      </div>
+    </div>
+  </section>
+  <div id="labs" class="section-heading">
+    <div>
+      <span class="section-kicker">Explore and experiment</span>
+      <h2>Choose your security lab</h2>
+      <p>Three common web flaws, explained simply with live examples, broken code, and safe fixes.</p>
+    </div>
+    <span class="section-note">03 hands-on labs</span>
+  </div>
+  <section class="grid" aria-label="Security labs">
+    <article class="card lab-card" style="--lab-tint:var(--primary-soft);--lab-icon:var(--primary)">
+      <span class="lab-num">Lab 01 · Browser security</span>
+      <div class="lab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="15" rx="3"/><path d="M3 9h18m-12 4 3 3 3-3"/></svg></div>
+      <h3>Clickjacking</h3>
+      <p>CWE-1021 — A hidden frame tricks a visitor into clicking a button for an action they did not intend.</p>
+      <div class="card-bottom"><span class="pill Easy">Easy</span><a class="round-arrow" href="labs/clickjacking.html" aria-label="Open Clickjacking lab">→</a></div>
+    </article>
+    <article class="card lab-card" style="--lab-tint:var(--accent-soft);--lab-icon:var(--accent-deep)">
+      <span class="lab-num">Lab 02 · Message security</span>
+      <div class="lab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="15" rx="3"/><path d="m7 10 5 4 5-4M9 3h6"/></svg></div>
+      <h3>Origin Validation</h3>
+      <p>CWE-346 — A page accepts postMessage data without checking event.origin, letting untrusted sites act.</p>
+      <div class="card-bottom"><span class="pill Medium">Medium</span><a class="round-arrow" href="labs/origin-validation.html" aria-label="Open Origin Validation lab">→</a></div>
+    </article>
+    <article class="card lab-card" style="--lab-tint:var(--bg-2);--lab-icon:var(--code)">
+      <span class="lab-num">Lab 03 · JavaScript security</span>
+      <div class="lab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h16M8 4v16M16 4v16M4 16h16"/><circle cx="12" cy="12" r="2"/></svg></div>
+      <h3>Prototype Pollution</h3>
+      <p>CWE-1321 — Unsafe object merging alters a shared prototype and gives other objects unexpected values.</p>
+      <div class="card-bottom"><span class="pill Hard">Hard</span><a class="round-arrow" href="labs/prototype-pollution.html" aria-label="Open Prototype Pollution lab">→</a></div>
+    </article>
+  </section>
+</main>
+<footer>
+  <div class="foot">
+    <p class="footer-kicker">42 Irbid · Cybersecurity Final Project · November 2026</p>
+    <p><b>Ghurir — Interactive Web Security Sandbox</b></p>
+    <p>Team: raajloun, aal_ness, sal-fara, ahalshou, aabtah.</p>
+    <p>Educational simulations only. No real systems are targeted.</p>
+  </div>
+</footer>
+<script src="assets/js/ui.js"></script>
+</body>
 </html>

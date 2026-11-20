@@ -3,158 +3,275 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#F6F4EE" />
     <title>Prototype Pollution - Ghurir</title>
     <link rel="stylesheet" href="../assets/css/style.css" />
   </head>
+
   <body>
     <header>
-      <nav>
-        <a href="../index.html" style="text-decoration: none"><b>Ghurir</b></a>
+      <nav aria-label="Primary navigation">
+        <a class="brand" href="../index.html" aria-label="Ghurir home">
+          <span class="brand-mark">
+            <svg viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.1"
+              stroke-linecap="round" stroke-linejoin="round"
+              aria-hidden="true">
+              <path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 5l-4 14"/>
+            </svg>
+          </span>
+          <span class="brand-name">Ghurir</span>
+          <span class="brand-meta">Security Lab</span>
+        </a>
+
         <div class="links">
           <a href="../index.html">Home</a>
           <a href="clickjacking.html">Clickjacking</a>
           <a href="origin-validation.html">Origin Validation</a>
           <a href="prototype-pollution.html" class="here"
-            >Prototype Pollution</a
-          >
+             aria-current="page">Prototype Pollution</a>
         </div>
       </nav>
     </header>
-    <main class="lab">
-      <h1>Prototype Pollution</h1>
-      <p class="tag">
-        CWE-1321 &middot; OWASP A08:2021 Software and Data Integrity Failures
-      </p>
-      <section class="card">
-        <h2>What it is</h2>
-        <p>
-          Prototype pollution (CWE-1321, Improperly Controlled Modification of
-          Object Prototype Attributes) lets untrusted input edit the shared
-          prototype that JavaScript objects inherit from. Every object then
-          inherits the attacker's property, which can bypass checks such as
-          isAdmin.
+
+    <main class="lab lab-page proto-page">
+
+      <div class="lab-heading">
+        <span class="eyebrow">Security lab / Prototype pollution</span>
+
+        <h1>Prototype Pollution</h1>
+
+        <p class="tag">
+          CWE-1321 &middot; OWASP A08:2021 Software and Data Integrity Failures
         </p>
-      </section>
-      <section class="card">
-        <h2>The vulnerable code</h2>
-        <pre data-hl="5,9">
-function merge(target, source) {
-  for (const key in source) {
-    if (typeof source[key] === 'object' && source[key] !== null) {
-      target[key] = target[key] || {};
-      merge(target[key], source[key]);
-    } else target[key] = source[key];
-  }
-}
-const isAdmin = (user) => user.isAdmin === true;</pre>
-        <p>
-          merge() follows the key '__proto__' (or constructor.prototype) into
-          the shared prototype, and isAdmin() trusts inherited values. The demo
-          uses an isolated prototype, not the real Object.prototype.
+
+        <p class="lab-lead">
+          In JavaScript, objects can inherit properties from a shared
+          prototype. If untrusted input sets a key like __proto__ during
+          an object merge, it can change the shared prototype and give
+          other objects unexpected values—such as admin access.
         </p>
-      </section>
-      <section class="card">
-        <h2>Try it</h2>
-        <p class="steps">
-          <b>Pick a mode</b>, then <b>fire a payload</b>, then
-          <b>read the result</b>. Switch mode and fire the same payload again.
-        </p>
-        <div class="sw">
-          <button data-mode="vulnerable" class="on">Vulnerable</button>
-          <button data-mode="fixed">Fixed</button>
+      </div>
+      <section class="lab-block" id="why-it-matters">
+
+        <div class="section-header">
+          <span class="eyebrow">Real-world impact</span>
+          <h2>Why it matters</h2>
         </div>
-        <p>Merge a "profile update" into the user:</p>
-        <button class="atk" data-payload="proto">__proto__ payload</button>
-        <button class="atk" data-payload="ctor">
-          constructor.prototype payload
-        </button>
-        <button class="atk" data-payload="benign">Harmless update</button>
-        <pre id="inspect" style="padding: 12px; margin-top: 10px"></pre>
-        <div id="out" class="out"></div>
-        <button data-reset>Reset</button>
-      </section>
-      <section class="card">
-        <h2>Why it matters</h2>
         <p>
-          One polluted prototype can grant admin rights to every object, change
-          app behavior, or cause crashes. The popular lodash library had this
-          flaw in defaultsDeep (CVE-2019-10744).
+          Polluting a shared prototype can affect many objects across the
+          app at once—altering default options, bypassing checks, or
+          causing unexpected errors. A well-known real-world example is
+          CVE-2019-10744 in <code>lodash</code>, where unsafe merge or
+          defaults helpers allowed prototype pollution.
         </p>
-      </section>
-      <section class="card">
-        <h2>The fix</h2>
-        <p class="steps">
-          Switch modes below and re-run your last payload to see the difference.
-        </p>
-        <pre class="fix" data-hl="4,6,11">
-const BLOCKED_KEYS = ['__proto__', 'constructor', 'prototype'];
-function safeMerge(target, source) {
-  for (const key of Object.keys(source)) {
-    if (BLOCKED_KEYS.includes(key)) throw new Error('Dangerous key rejected: ' + key);
-    if (typeof source[key] === 'object' && source[key] !== null) {
-      if (!Object.hasOwn(target, key)) target[key] = Object.create(null);
-      safeMerge(target[key], source[key]);
-    } else target[key] = source[key];
-  }
-}
-const isAdmin = (user) => Object.hasOwn(user, 'isAdmin') && user.isAdmin === true;</pre>
-        <p>
-          Dangerous keys are rejected, new objects have no prototype
-          (Object.create(null)), and the check reads only own properties, so
-          inherited values can never grant access.
-        </p>
-        <div class="sw">
-          <button data-mode="vulnerable" class="on">Vulnerable</button>
-          <button data-mode="fixed">Fixed</button>
+
+          </section>
+      <div class="lab-layout">
+        <div class="lab-content">
+
+          <section class="card proto-playground" id="try-it">
+
+            <div class="playground-heading">
+              <div>
+                <span class="eyebrow">Vulnerability discovery</span>
+                <h2>See how the attack happens</h2>
+              </div>
+
+              <div class="sw">
+                <button data-mode="vulnerable" class="on">
+                  Vulnerable
+                </button>
+                <button data-mode="fixed">
+                  Fixed
+                </button>
+              </div>
+            </div>
+
+            <div class="proto-stage">
+              <div class="proto-panel proto-inputs">
+                <p class="panel-title">Profile update input</p>
+                <p class="panel-hint">
+                  Send a JSON update into <code>user</code> and check
+                  if an untouched <code>guest</code> becomes admin:
+                </p>
+
+                <button class="atk" data-payload="proto">
+                  __proto__ payload (set isAdmin: true)
+                </button>
+
+                <button class="atk" data-payload="ctor">
+                  constructor.prototype payload
+                </button>
+
+                <button class="atk" data-payload="benign">
+                  Harmless update (change name only)
+                </button>
+              </div>
+
+              <div class="proto-panel proto-state">
+                <p class="panel-title">Object state inspector</p>
+                <pre id="inspect"></pre>
+                <div class="state-actions">
+                  <button data-reset>Reset</button>
+                </div>
+              </div>
+            </div>
+
+            <div id="out" class="out" aria-live="polite"></div>
+
+          </section>
+
+          <section class="lab-block" id="vulnerable-code">
+
+            <div class="section-header">
+              <span class="eyebrow">Code analysis</span>
+              <h2>The vulnerable code</h2>
+            </div>
+
+            <div class="code-shell vuln">
+              <div class="code-toolbar">
+                <span>
+                  <span class="dots">
+                    <i></i><i></i><i></i>
+                  </span>
+                  VULNERABLE CODE · JavaScript
+                </span>
+
+                <button class="code-copy" type="button"
+                  aria-label="Copy vulnerable code">
+                  Copy code
+                </button>
+              </div>
+
+              <pre data-hl="5,6,9">
+                function merge(target, source) {
+                for (const key in source) {
+                  if (typeof source[key] === 'object' && source[key] !== null) {
+                    target[key] = target[key] || {};
+                    merge(target[key], source[key]);
+                  } else target[key] = source[key];
+                }
+              }
+              const isAdmin = (user) => user.isAdmin === true;
+            </pre>
+            </div>
+
+            <p>
+              The merge helper follows keys like <code>__proto__</code> or
+              <code>constructor.prototype</code> into the shared prototype,
+              and <code>isAdmin</code> accepts inherited properties instead of
+              checking only the object's own properties.
+            </p>
+
+          </section>
+
+          <section class="lab-block" id="the-fix">
+
+            <div class="section-header">
+              <span class="eyebrow">Remediation</span>
+              <h2>The fixed code</h2>
+            </div>
+
+            <div class="code-shell safe">
+              <div class="code-toolbar">
+                <span>
+                  <span class="dots">
+                    <i></i><i></i><i></i>
+                  </span>
+                  SECURE CODE · JavaScript
+                </span>
+
+                <button class="code-copy" type="button"
+                  aria-label="Copy secure code">
+                  Copy code
+                </button>
+              </div>
+
+              <pre class="fix" data-hl="4,6,11">
+                const BLOCKED_KEYS = ['__proto__', 'constructor', 'prototype'];
+                function safeMerge(target, source) {
+                  for (const key of Object.keys(source)) {
+                    if (BLOCKED_KEYS.includes(key)) throw new Error('Dangerous key rejected: ' + key);
+                    if (typeof source[key] === 'object' && source[key] !== null) {
+                      if (!Object.hasOwn(target, key)) target[key] = Object.create(null);
+                      safeMerge(target[key], source[key]);
+                    } else target[key] = source[key];
+                  }
+                }
+                const isAdmin = (user) => Object.hasOwn(user, 'isAdmin') && user.isAdmin === true;
+              </pre>
+            </div>
+
+            <p>
+              Dangerous keys are blocked, nested objects use
+              <code>Object.create(null)</code> without a prototype chain,
+              and <code>Object.hasOwn</code> ensures admin checks ignore
+              inherited values.
+            </p>
+
+          </section>
+
+          <section class="lab-block" id="sources">
+
+            <div class="section-header">
+              <span class="eyebrow">References</span>
+              <h2>Sources</h2>
+            </div>
+
+            <ul class="sources">
+              <li>
+                <a href="https://cwe.mitre.org/data/definitions/1321.html">
+                  <em>MITRE CWE-1321</em>
+                </a>
+              </li>
+
+              <li>
+                <a href="https://portswigger.net/web-security/prototype-pollution">
+                  <em>PortSwigger: Prototype pollution</em>
+                </a>
+              </li>
+
+              <li>
+                <a href="https://nvd.nist.gov/vuln/detail/CVE-2019-10744">
+                  <em>NVD: CVE-2019-10744 (lodash)</em>
+                </a>
+              </li>
+
+              <li>
+                <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/hasOwn">
+                  <em>MDN: Object.hasOwn</em>
+                </a>
+              </li>
+            </ul>
+
+          </section>
+
         </div>
-        <button data-rerun>Run the last payload in the other mode</button>
-      </section>
-      <section class="card">
-        <h2>Sources</h2>
-        <ul>
-          <li>
-            <a href="https://cwe.mitre.org/data/definitions/1321.html"
-              >MITRE CWE-1321</a
-            >
-          </li>
-          <li>
-            <a href="https://portswigger.net/web-security/prototype-pollution"
-              >PortSwigger: Prototype pollution</a
-            >
-          </li>
-          <li>
-            <a href="https://nvd.nist.gov/vuln/detail/CVE-2019-10744"
-              >NVD: CVE-2019-10744 (lodash)</a
-            >
-          </li>
-          <li>
-            <a
-              href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/hasOwn"
-              >MDN: Object.hasOwn</a
-            >
-          </li>
-        </ul>
-      </section>
+      </div>
     </main>
     <footer>
       <div class="foot">
-        <div>
-          <p><b>Ghurir - Interactive Web Security Sandbox</b></p>
-          <p>42 Irbid Cybersecurity Final Project, 15-22 November 2026.</p>
-          <p>
-            Team: raajloun, aal_ness, sal-fara, ahalshou, aabtah. Educational
-            simulation only.
-          </p>
-        </div>
-        <div>
-          <p><b>Labs</b></p>
-          <a href="clickjacking.html">Clickjacking</a>
-          <a href="origin-validation.html">Origin Validation</a>
-          <a href="prototype-pollution.html">Prototype Pollution</a>
-        </div>
+        <p class="footer-kicker">
+          42 Irbid · Cybersecurity Final Project · November 2026
+        </p>
+
+        <p>
+          <b>Ghurir — Interactive Web Security Sandbox</b>
+        </p>
+
+        <p>
+          Team: raajloun, aal_ness, sal-fara, ahalshou, aabtah.
+        </p>
+
+        <p>
+          Educational simulations only. No real systems are targeted.
+        </p>
       </div>
     </footer>
+
     <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/ui.js"></script>
     <script src="../assets/js/prototype-pollution.js"></script>
   </body>
 </html>
