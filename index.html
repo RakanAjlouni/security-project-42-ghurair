@@ -53,26 +53,40 @@
     <span class="section-note">03 hands-on labs</span>
   </div>
   <section class="grid" aria-label="Security labs">
-    <article class="card lab-card" style="--lab-tint:var(--primary-soft);--lab-icon:var(--primary)">
+    <article class="card lab-card" style="--lab-tint:var(--primary-soft);--lab-icon:var(--primary)" onclick="window.location.href='labs/clickjacking.html'">
       <span class="lab-num">Lab 01 · Browser security</span>
-      <div class="lab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="15" rx="3"/><path d="M3 9h18m-12 4 3 3 3-3"/></svg></div>
-      <h3>Clickjacking</h3>
+      <div class="lab-top">
+        <div class="lab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="15" rx="3"/><path d="M3 9h18m-12 4 3 3 3-3"/></svg></div>
+        <h3>Clickjacking</h3>
+      </div>
       <p>CWE-1021 — A hidden frame tricks a visitor into clicking a button for an action they did not intend.</p>
-      <div class="card-bottom"></div><a class="round-arrow" href="labs/clickjacking.html" aria-label="Open Clickjacking lab">→</a></div>
+      <div class="card-bottom">
+        <a class="round-arrow" href="labs/clickjacking.html" aria-label="Open Clickjacking lab">→</a>
+      </div>
     </article>
-    <article class="card lab-card" style="--lab-tint:var(--accent-soft);--lab-icon:var(--accent-deep)">
+
+    <article class="card lab-card" style="--lab-tint:var(--accent-soft);--lab-icon:var(--accent-deep)" onclick="window.location.href='labs/origin-validation.html'">
       <span class="lab-num">Lab 02 · Message security</span>
-      <div class="lab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="15" rx="3"/><path d="m7 10 5 4 5-4M9 3h6"/></svg></div>
-      <h3>Origin Validation</h3>
+      <div class="lab-top">
+        <div class="lab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="15" rx="3"/><path d="m7 10 5 4 5-4M9 3h6"/></svg></div>
+        <h3>Origin Validation</h3>
+      </div>
       <p>CWE-346 — A page accepts postMessage data without checking event.origin, letting untrusted sites act.</p>
-      <div class="card-bottom"><a class="round-arrow" href="labs/origin-validation.html" aria-label="Open Origin Validation lab">→</a></div>
+      <div class="card-bottom">
+        <a class="round-arrow" href="labs/origin-validation.html" aria-label="Open Origin Validation lab">→</a>
+      </div>
     </article>
-    <article class="card lab-card" style="--lab-tint:var(--bg-2);--lab-icon:var(--code)">
+
+    <article class="card lab-card" style="--lab-tint:var(--bg-2);--lab-icon:var(--code)" onclick="window.location.href='labs/prototype-pollution.html'">
       <span class="lab-num">Lab 03 · JavaScript security</span>
-      <div class="lab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h16M8 4v16M16 4v16M4 16h16"/><circle cx="12" cy="12" r="2"/></svg></div>
-      <h3>Prototype Pollution</h3>
+      <div class="lab-top">
+        <div class="lab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h16M8 4v16M16 4v16M4 16h16"/><circle cx="12" cy="12" r="2"/></svg></div>
+        <h3>Prototype Pollution</h3>
+      </div>
       <p>CWE-1321 — Unsafe object merging alters a shared prototype and gives other objects unexpected values.</p>
-      <div class="card-bottom"><a class="round-arrow" href="labs/prototype-pollution.html" aria-label="Open Prototype Pollution lab">→</a></div>
+      <div class="card-bottom">
+        <a class="round-arrow" href="labs/prototype-pollution.html" aria-label="Open Prototype Pollution lab">→</a>
+      </div>
     </article>
   </section>
 </main>
