@@ -1,8 +1,6 @@
 # IWSS — Interactive Web Security Sandbox
 
-An interactive, client-side web security sandbox built for the **IWSS** at **42 Irbid**.
-
-🌐 **Live Demo:** https://rakanajlouni.github.io/security-project-42-ghurair/
+An interactive, client-side web security sandbox built as the Cybersecurity Final Project at **42 Irbid**.
 
 ---
 
@@ -15,7 +13,7 @@ IWSS provides three safe, interactive web security labs where visitors see how a
 | Lab | Vulnerability | CWE | OWASP Top 10 | Fix Mechanism |
 | :--- | :--- | :--- | :--- | :--- |
 | **01** | **Clickjacking** | CWE-1021 | A04:2021 | Frame protection via `Content-Security-Policy: frame-ancestors 'self'` and `X-Frame-Options: SAMEORIGIN` |
-| **02** | **Origin Validation Error** | CWE-346 | A01:2021 | Exact `event.origin` allowlist check and payload validation |
+| **02** | **Origin Validation Error** | CWE-346 | A07:2021 | Exact `event.origin` allowlist check and payload validation |
 | **03** | **Prototype Pollution** | CWE-1321 | A08:2021 | Block `__proto__`, `constructor`, and `prototype` keys, use `Object.create(null)`, and check with `Object.hasOwn()` |
 
 ---
@@ -36,33 +34,28 @@ Open `index.html` directly in a browser, or start a local server from the projec
 ```bash
 python3 -m http.server 8000
 ```
-
 Then open http://localhost:8000.
 
----
-
 ## Project Structure
+```
 Plaintext
-```
-security-project-42-ghurair/
-├── index.html
-├── labs/
-│   ├── clickjacking.html
-│   ├── origin-validation.html
-│   └── prototype-pollution.html
-├── assets/
-│   ├── css/
-│   │   └── style.css
-│   └── js/
-│       ├── main.js
-│       ├── ui.js
-│       ├── clickjacking.js
-│       ├── origin-validation.js
-│       └── prototype-pollution.js
-└── README.md
-```
---- 
 
-Team (42 Irbid)
-
+    security-project-42-ghurair/
+    ├── index.html
+    ├── labs/
+    │   ├── clickjacking.html
+    │   ├── origin-validation.html
+    │   └── prototype-pollution.html
+    ├── assets/
+    │   ├── css/
+    │   │   └── style.css
+    │   └── js/
+    │       ├── main.js
+    │       ├── ui.js
+    │       ├── clickjacking.js
+    │       ├── origin-validation.js
+    │       └── prototype-pollution.js
+    └── README.md
+```
+## Team (42 Irbid)
 raajloun • aal_ness • sal-fara • ahalshou • ababtah

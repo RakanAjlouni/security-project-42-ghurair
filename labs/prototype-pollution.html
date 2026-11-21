@@ -58,14 +58,18 @@
           <h2>Why it matters</h2>
         </div>
         <p>
-          Polluting a shared prototype can affect many objects across the
-          app at once—altering default options, bypassing checks, or
-          causing unexpected errors. A well-known real-world example is
-          CVE-2019-10744 in <code>lodash</code>, where unsafe merge or
-          defaults helpers allowed prototype pollution.
+          Polluting a shared prototype can affect many objects at once. It
+          can change default options, bypass checks like <code>isAdmin</code>,
+          or cause errors.
         </p>
-
-          </section>
+        <p>
+          <b>Real example (CVE-2019-10744):</b> in <code>lodash</code>
+          versions before 4.17.12, the <code>defaultsDeep</code> function
+          could be tricked, with a <code>constructor</code> payload, into
+          changing <code>Object.prototype</code>. It is rated 9.1 (Critical)
+          by CVSS v3. This is the same kind of payload as our second button.
+        </p>
+      </section>
       <div class="lab-layout">
         <div class="lab-content">
 
@@ -110,6 +114,10 @@
 
               <div class="proto-panel proto-state">
                 <p class="panel-title">Object state inspector</p>
+                <p class="panel-hint">
+                  Simulation note: this demo uses its own private prototype,
+                  so the real <code>Object.prototype</code> is never changed.
+                </p>
                 <pre id="inspect"></pre>
                 <div class="state-actions">
                   <button data-reset>Reset</button>
@@ -144,16 +152,15 @@
               </div>
 
               <pre data-hl="5,6,9">
-                function merge(target, source) {
-                for (const key in source) {
-                  if (typeof source[key] === 'object' && source[key] !== null) {
-                    target[key] = target[key] || {};
-                    merge(target[key], source[key]);
-                  } else target[key] = source[key];
-                }
-              }
-              const isAdmin = (user) => user.isAdmin === true;
-            </pre>
+function merge(target, source) {
+  for (const key in source) {
+    if (typeof source[key] === 'object' && source[key] !== null) {
+      target[key] = target[key] || {};
+      merge(target[key], source[key]);
+    } else target[key] = source[key];
+  }
+}
+const isAdmin = (user) => user.isAdmin === true;</pre>
             </div>
 
             <p>
@@ -188,18 +195,17 @@
               </div>
 
               <pre class="fix" data-hl="4,6,11">
-                const BLOCKED_KEYS = ['__proto__', 'constructor', 'prototype'];
-                function safeMerge(target, source) {
-                  for (const key of Object.keys(source)) {
-                    if (BLOCKED_KEYS.includes(key)) throw new Error('Dangerous key rejected: ' + key);
-                    if (typeof source[key] === 'object' && source[key] !== null) {
-                      if (!Object.hasOwn(target, key)) target[key] = Object.create(null);
-                      safeMerge(target[key], source[key]);
-                    } else target[key] = source[key];
-                  }
-                }
-                const isAdmin = (user) => Object.hasOwn(user, 'isAdmin') && user.isAdmin === true;
-              </pre>
+const BLOCKED_KEYS = ['__proto__', 'constructor', 'prototype'];
+function safeMerge(target, source) {
+  for (const key of Object.keys(source)) {
+    if (BLOCKED_KEYS.includes(key)) throw new Error('Dangerous key rejected: ' + key);
+    if (typeof source[key] === 'object' && source[key] !== null) {
+      if (!Object.hasOwn(target, key)) target[key] = Object.create(null);
+      safeMerge(target[key], source[key]);
+    } else target[key] = source[key];
+  }
+}
+const isAdmin = (user) => Object.hasOwn(user, 'isAdmin') && user.isAdmin === true;</pre>
             </div>
 
             <p>

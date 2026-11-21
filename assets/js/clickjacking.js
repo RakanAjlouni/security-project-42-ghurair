@@ -7,31 +7,47 @@ const HEADERS = {
   vulnerable: {},
   fixed: {
     "content-security-policy": "frame-ancestors 'self'",
+    "x-frame-options": "SAMEORIGIN",
   },
 };
 
+// Simulated browser decision: may this site put the page inside a frame?
 function browserAllowsFraming(headers, ancestorOrigin) {
   const match = (headers["content-security-policy"] || "").match(
     /frame-ancestors([^;]*)/,
   );
 
-  if (!match) return true;
+  // Modern browsers use CSP frame-ancestors first and ignore X-Frame-Options.
+  if (match) {
+    const sources = match[1].trim().split(/\s+/);
+    return sources.some(
+      (s) =>
+        s === ancestorOrigin ||
+        (s === "'self'" && ancestorOrigin === TARGET_ORIGIN),
+    );
+  }
 
-  const sources = match[1].trim().split(/\s+/);
+  // Old browsers fall back to X-Frame-Options.
+  const xfo = (headers["x-frame-options"] || "").trim().toUpperCase();
+  if (xfo === "DENY") return false;
+  if (xfo === "SAMEORIGIN") return ancestorOrigin === TARGET_ORIGIN;
 
-  return sources.some(
-    (s) =>
-      s === ancestorOrigin ||
-      (s === "'self'" && ancestorOrigin === TARGET_ORIGIN),
-  );
+  return true; // no rule at all: any site may frame the page
 }
 
-const TARGET_PAGE =
-  '<!doctype html><html><body style="margin:0;height:100%;background:rgba(188,75,73,.10);font:600 15px system-ui,sans-serif">' +
-  '<span style="position:absolute;left:12px;top:12px;padding:3px 10px;border-radius:99px;background:rgba(255,255,255,.9);color:#8E2F2D;font-size:11px;font-weight:700">bank.example / Settings</span>' +
-  '<button id="b" style="position:absolute;left:50%;margin-left:-95px;top:236px;width:190px;height:44px;border:0;border-radius:10px;background:#BC4B49;color:#fff;font:700 14px system-ui,sans-serif;cursor:pointer">Delete my account</button>' +
-  '<script>document.getElementById("b").onclick=()=>parent.postMessage("account-deleted","*")<\/script>' +
-  '</body></html>';
+// The hidden bank page. Its button is placed exactly under the decoy button.
+function targetPage(top) {
+  return (
+    '<!doctype html><html><body style="margin:0;height:100%;background:rgba(188,75,73,.10);font:600 15px system-ui,sans-serif">' +
+    '<span style="position:absolute;left:12px;top:12px;padding:3px 10px;border-radius:99px;background:rgba(255,255,255,.9);color:#8E2F2D;font-size:11px;font-weight:700">bank.example / Settings</span>' +
+    '<button id="b" style="position:absolute;left:50%;margin-left:-95px;top:' + top + 'px;width:190px;height:44px;border:0;border-radius:10px;background:#BC4B49;color:#fff;font:700 14px system-ui,sans-serif;cursor:pointer">Delete my account</button>' +
+    '<script>' +
+    'var b=document.getElementById("b");' +
+    'b.onclick=function(){parent.postMessage("account-deleted","*")};' +
+    'addEventListener("message",function(e){if(e.source===parent&&e.data&&e.data.type==="top")b.style.top=e.data.value+"px"});' +
+    '<\/script></body></html>'
+  );
+}
 
 const SAFE_DECOY_PAGE =
   '<!doctype html><html><head><title>Decoy Page // Safe Click</title></head>' +
@@ -61,7 +77,7 @@ function mountTrap() {
 
   frame.classList.remove("revealed");
   frame.classList.toggle("live", framed);
-  frame.srcdoc = framed ? TARGET_PAGE : "";
+  frame.srcdoc = framed ? targetPage(decoy.offsetTop) : "";
 
   stageBlock.classList.toggle("show", !framed);
 
@@ -113,6 +129,13 @@ function run(id) {
     revealLayers();
   }
 }
+
+// If the layout changes, move the hidden button so it stays under the decoy.
+window.addEventListener("resize", () => {
+  if (framed && frame.contentWindow) {
+    frame.contentWindow.postMessage({ type: "top", value: decoy.offsetTop }, "*");
+  }
+});
 
 window.addEventListener("message", (e) => {
   if (

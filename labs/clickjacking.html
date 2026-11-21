@@ -60,12 +60,18 @@
             </div>
 
             <p>
-              If an attacker hides a sensitive button—such as deleting an
-              account, changing privacy settings, or approving a transfer—under
-              a fake offer, a single click can cause real damage without the
-              user noticing. Clickjacking bugs have historically affected major
-              web platforms and social apps when framing headers were missing
-              on sensitive actions.
+              One hidden click can delete an account, change a setting, or
+              approve a payment, because it runs inside the visitor's
+              logged-in session.
+            </p>
+            <p>
+              <b>Real incident (February 2009):</b> a page spread across
+              Twitter this way. It placed Twitter's own page in an invisible
+              iframe over a "Don't Click" button, so each click posted the
+              link from the visitor's account. Twitter said the harm was
+              limited to reposting and released a fix, but the first fix was
+              only a frame-busting script, and attackers got around it. The
+              reliable defence is the server header shown below.
             </p>
 
         </section>
@@ -260,6 +266,24 @@
               <li>
                 <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy/frame-ancestors">
                   <em>MDN: CSP frame-ancestors</em>
+                </a>
+              </li>
+
+              <li>
+                <a href="https://owasp.org/Top10/A04_2021-Insecure_Design/">
+                  <em>OWASP Top 10: A04 Insecure Design</em>
+                </a>
+              </li>
+
+              <li>
+                <a href="https://www.theregister.com/2009/02/13/twitter_clickjack_attack/">
+                  <em>The Register: Twitter clickjacking attack (2009)</em>
+                </a>
+              </li>
+
+              <li>
+                <a href="https://blog.twitter.com/2009/clickjacking-blocked">
+                  <em>Twitter blog: Clickjacking blocked (2009)</em>
                 </a>
               </li>
 

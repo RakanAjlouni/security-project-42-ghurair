@@ -49,7 +49,9 @@
   document.querySelectorAll('.code-copy').forEach(btn => {
     btn.addEventListener('click', async () => {
       const pre = btn.closest('.code-shell').querySelector('pre');
-      const value = pre.textContent;
+      // Every code line is its own <span>, so join them with real line breaks.
+      const rows = [...pre.children];
+      const value = rows.length ? rows.map((r) => r.textContent.replace(/^ $/, '')).join('\n') : pre.textContent;
       let copied = false;
       try { if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(value); copied = true; } }
       catch (_) { /* local file fall back */ }

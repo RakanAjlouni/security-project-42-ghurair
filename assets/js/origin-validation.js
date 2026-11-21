@@ -1,6 +1,6 @@
 "use strict";
 
-const ALLOWED_ORIGINS = ["https://app.ghurir.example"];
+const ALLOWED_ORIGINS = ["https://app.iwss.example"];
 let balance = 1000;
 let outcome = null;
 
@@ -27,9 +27,12 @@ function onMessageFixed(event) {
     m.amount > 0 &&
     m.amount <= balance;
   if (!valid) {
+    const tooBig = m && Number.isFinite(m.amount) && m.amount > balance;
     return {
       accepted: false,
-      why: `Amount "${m && m.amount}" is not a valid number`,
+      why: tooBig
+        ? `Amount "${m.amount}" is more than the balance`
+        : `Amount "${m && m.amount}" is not a valid number`,
     };
   }
   balance -= m.amount;

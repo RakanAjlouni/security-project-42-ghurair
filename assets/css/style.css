@@ -1,5 +1,5 @@
 /* ==========================================================
-   GHURIR — Unified visual identity (Sage × Soft Apricot)
+   IWSS — Unified visual identity (Sage × Soft Apricot)
    Change a colour ONCE in :root and the whole site follows.
    ========================================================== */
 
@@ -92,9 +92,12 @@ main { flex: 1; padding: 36px 0 65px }
 .eyebrow::before { content: ""; display: block; width: 24px; height: 2px; border-radius: 4px; background: linear-gradient(90deg, var(--accent), var(--primary)) }
 .tag { display: inline-flex; align-items: center; width: fit-content; gap: 8px; border: 1px solid var(--primary-line); border-radius: 99px; padding: 6px 14px; background: var(--primary-soft); color: var(--primary-deep); font: 650 12px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; margin: 0 0 10px }
 .card { background: var(--card); border: 1px solid var(--bd); border-radius: var(--radius); padding: 27px 30px; margin: 18px 0; box-shadow: var(--shadow) }
-.pill { display: inline-block; background: var(--ok-soft); color: #3A7556; padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 800 }
-.pill.Medium { background: #F6EAD3; color: #8A6420 }
-.pill.Hard   { background: var(--bad-soft); color: #A23F3D }
+/* Difficulty pill: neutral colours + dots (red/green are reserved for Vulnerable/Fixed) */
+.pill { display: inline-flex; align-items: center; gap: 8px; background: var(--bg-2); color: var(--tx); border: 1px solid var(--bd); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 800 }
+.pill::after { color: var(--accent-deep); letter-spacing: .15em }
+.pill.Easy::after   { content: "●○○" }
+.pill.Medium::after { content: "●●○" }
+.pill.Hard::after   { content: "●●●" }
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 44px; padding: 11px 19px; border-radius: 12px; text-decoration: none; font-size: 13px; font-weight: 750; border: 1px solid transparent; transition: transform .23s, box-shadow .23s, background .23s, color .23s }
 .btn:hover { transform: translateY(-2px) }
 .btn-primary { background: linear-gradient(130deg, var(--primary), var(--primary-deep)); color: #fff; box-shadow: 0 9px 21px rgb(var(--p-rgb) / .32) }
@@ -156,22 +159,6 @@ main { flex: 1; padding: 36px 0 65px }
 .round-arrow { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--primary-soft); color: var(--primary-deep); font-size: 18px; text-decoration: none; transition: transform .2s, background .2s, color .2s }
 .lab-card:hover .round-arrow { transform: translateX(3px); background: var(--accent); color: var(--on-accent) }
 
-.how { margin-top: 25px; display: grid; grid-template-columns: .8fr 1.2fr; gap: 28px; align-items: center; padding: 28px 33px; background: linear-gradient(125deg, var(--primary-soft), var(--accent-soft)) }
-.how h2 { font-size: 25px; margin: 0 0 7px }
-.how p { font-size: 13px; color: var(--mu); margin: 0 }
-.flow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin: 0 }
-.flow-step {
-  position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px;
-  padding: 20px 12px 18px; background: rgba(255,253,249,.9); border: 1px solid var(--bd); border-radius: 16px;
-  box-shadow: 0 6px 16px rgba(31,42,55,.05);
-}
-.flow-num {
-  width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; margin-bottom: 4px;
-  background: linear-gradient(135deg, var(--primary), var(--primary-deep)); color: #fff;
-  font-size: 17px; font-weight: 800; box-shadow: 0 5px 12px rgb(var(--p-rgb) / .30);
-}
-.flow-step b { font-size: 13.5px; color: var(--code) }
-.flow-step small { font-size: 11.5px; color: var(--mu); line-height: 1.4 }
 
 /* 6. LAB PAGES — SHARED STRUCTURE & CODE BLOCKS ------------ */
 .lab-page { padding-top: 34px }
@@ -365,7 +352,6 @@ footer p { max-width: 600px; margin: 0 }
   .art-screen { transform: scale(.87) rotate(-4deg) }
   .grid { grid-template-columns: 1fr }
   .lab-card { min-height: 210px }
-  .how { grid-template-columns: 1fr }
 }
 
 @media (max-width: 760px) {
@@ -399,7 +385,6 @@ footer p { max-width: 600px; margin: 0 }
   .section-note { display: none }
   .card { padding: 20px 17px }
   .lab-heading h1 { font-size: 32px }
-  .flow { grid-template-columns: 1fr; gap: 20px }
 }
 
 @media (prefers-reduced-motion: reduce) {

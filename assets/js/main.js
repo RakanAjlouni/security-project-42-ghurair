@@ -58,7 +58,11 @@ const Lab = {
 
 document.querySelectorAll("pre[data-hl]").forEach((pre) => {
   const marked = pre.dataset.hl.split(",").map(Number);
-  const lines = pre.textContent.replace(/^\n/, "").trimEnd().split("\n");
+  const raw = pre.textContent.replace(/^\n/, "").trimEnd().split("\n");
+  // Remove the indentation that comes from the HTML source, so code starts at column 0.
+  const indents = raw.filter((l) => l.trim()).map((l) => l.match(/^ */)[0].length);
+  const cut = indents.length ? Math.min(...indents) : 0;
+  const lines = raw.map((l) => l.slice(cut));
   pre.textContent = "";
   lines.forEach((text, i) => {
     const row = document.createElement("span");

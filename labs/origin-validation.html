@@ -40,7 +40,7 @@
         <h1>Origin Validation Error</h1>
 
         <p class="tag">
-          CWE-346 &middot; OWASP A01:2021 Broken Access Control
+          CWE-346 &middot; OWASP A07:2021 Identification and Authentication Failures
         </p>
 
         <p class="lab-lead">
@@ -58,11 +58,15 @@
           </div>
             <p>
               If a page trusts any sender on <code>postMessage</code>, a
-              malicious site opened in another tab or frame can trigger
-              actions or send forged data on behalf of the visitor. Missing
-              origin checks in <code>postMessage</code> handlers is a
-              well-known web vulnerability that has exposed sensitive actions
-              and data across real-world web apps.
+              malicious site can trigger actions or send fake data on behalf
+              of the visitor.
+            </p>
+            <p>
+              <b>Real example (Slack):</b> a security researcher at Detectify
+              found that Slack's call window did not check who sent its
+              <code>postMessage</code> messages. In a proof of concept, a
+              malicious page made a victim's Slack hand over its access token.
+              One missing check was enough.
             </p>
 
         </section>
@@ -147,19 +151,17 @@
                 </button>
               </div>
 
-              <pre data-hl="5, 6">
-                let balance = 1000;
-                window.addEventListener('message', (event) => {
-                  // No check on event.origin before trusting the message
-                  const message = event.data;
-                  balance -= message.amount;
-                  render();
-                });
-
-                function render() {
-                  document.getElementById('balance').textContent = balance;
-                }
-              </pre>
+              <pre data-hl="3, 4">
+let balance = 1000;
+window.addEventListener('message', (event) => {
+  // No check on event.origin before trusting the message
+  const message = event.data;
+  balance -= message.amount;
+  render();
+});
+function render() {
+  document.getElementById('balance').textContent = balance;
+}</pre>
             </div>
 
             <p>
@@ -192,20 +194,18 @@
                 </button>
               </div>
 
-              <pre class="fix" data-hl="5">
-                const ALLOWED_ORIGINS = ['https://app.iwss.example'];
-                let balance = 1000;
-
-                window.addEventListener('message', (event) => {
-                  if (!ALLOWED_ORIGINS.includes(event.origin)) return;
-                  const m = event.data;
-                  const valid = m && m.type === 'transfer' &&
-                    Number.isFinite(m.amount) && m.amount > 0 && m.amount <= balance;
-                  if (!valid) return;
-                  balance -= m.amount;
-                  render();
-                });
-              </pre>
+              <pre class="fix" data-hl="4">
+const ALLOWED_ORIGINS = ['https://app.iwss.example'];
+let balance = 1000;
+window.addEventListener('message', (event) => {
+  if (!ALLOWED_ORIGINS.includes(event.origin)) return;
+  const m = event.data;
+  const valid = m && m.type === 'transfer' &&
+    Number.isFinite(m.amount) && m.amount > 0 && m.amount <= balance;
+  if (!valid) return;
+  balance -= m.amount;
+  render();
+});</pre>
             </div>
 
             <p>
@@ -230,6 +230,16 @@
                 </a>
               </li>
 
+              <li>
+                <a href="https://owasp.org/Top10/2021/A07_2021-Identification_and_Authentication_Failures/">
+                  <em>OWASP Top 10: A07 Identification and Authentication Failures</em>
+                </a>
+              </li>
+              <li>
+                <a href="https://labs.detectify.com/news/hacking-slack-using-postmessage-and-websocket-reconnect-to-steal-your-precious-token">
+                  <em>Detectify: Hacking Slack using postMessage</em>
+                </a>
+              </li>
               <li>
                 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage">
                   <em>MDN: window.postMessage security</em>
